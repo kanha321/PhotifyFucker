@@ -1,16 +1,12 @@
-package com.kanha.photifyfucker
+package com.kanha.photifyfucker.util
 
 import android.os.Build.VERSION.SDK_INT
 import android.util.Log
-import androidx.compose.ui.graphics.AndroidPath
+import com.kanha.photifyfucker.res.*
 import java.io.File
 import java.nio.file.Files.exists
 
 private const val TAG = "Ops"
-
-enum class Type{
-    File, Dir
-}
 
 fun copyWithShell(sourcePath: String, destinationPath: String) {
     var tempSourcePath = sourcePath
@@ -22,7 +18,7 @@ fun copyWithShell(sourcePath: String, destinationPath: String) {
     val command = "cp $tempSourcePath $destinationPath"
     mutableCommand = command
     Log.d(TAG, "copyFile: $command")
-    val result = RunCommand.shell(command)
+    val result = RunCommand.shell(command, updateSessionLog = true)
     if (result.isNotEmpty()) {
         mutableMimeType = "Error copying file: $result"
     } else {
@@ -32,6 +28,7 @@ fun copyWithShell(sourcePath: String, destinationPath: String) {
 
 fun deleteWithShell(path: String) {
     val command = "rm -rf $path"
+    mutableCommand = command
     Log.d(TAG, "deleteWithShell: $command")
     val result = RunCommand.shell(command)
     if (result.isNotEmpty()) {
@@ -42,10 +39,9 @@ fun deleteWithShell(path: String) {
 }
 
 
-
 fun copyAllPhotify() {
     var count = 0
-    isCopying = true
+    task = "Extracting photos from Photify"
     // check if android version is 11 or above
     val dir = if (SDK_INT >= 30) {
         "/data_mirror/data_ce/null/0/ai.photify.app/files/"
@@ -59,7 +55,7 @@ fun copyAllPhotify() {
         RunCommand.shell("mkdir $destinationPath")
     }
 
-    val files = RunCommand.shell("ls $dir")
+    val files = RunCommand.shell("ls $dir", updateSessionLog = false)
     // add only those files to array whose name starts with "jpg"
     val filesArray = files.split("\n").toTypedArray()
     val jpgFiles = ArrayList<File>()
@@ -68,19 +64,19 @@ fun copyAllPhotify() {
             jpgFiles.add(File("$dir$file"))
         }
     }
+    totalPhotos = jpgFiles.size
     copyAll = "Copying ${jpgFiles.size} files"
     // copy all files to the destination
     for (file in jpgFiles) {
         copyWithShell(file.absolutePath, "$destinationPath/saved_${file.name}.jpg")
         count++
         progress = "Copied $count/${jpgFiles.size} files"
-        if (count == jpgFiles.size) {
-            copyAll = "Copy all"
-            isCopying = false
-        }
     }
 }
+
 fun separateAlternately() {
+    var count = 0
+    task = "Separating watermarked &\nnon-watermarked photos"
     val destinationPath = "/storage/emulated/0/Pictures/Photify"
     // in this directory there are some files which select them alternately and store them in 2 separate arrays
     val files = RunCommand.shell("ls $destinationPath")
@@ -104,23 +100,40 @@ fun separateAlternately() {
         RunCommand.shell("mkdir $destinationPath2")
     }
     // copy the alternates to the 2 directories
+    task = "Collecting non-watermarked photos"
     for (file in filesArray1) {
         copyWithShell(file.absolutePath, "$destinationPath1/${file.name}")
+        count++
+        progress = "Collected $count/${totalPhotos / 2} files"
     }
+    count = 0
+    task = "Collecting watermarked photos"
     for (file in filesArray2) {
         copyWithShell(file.absolutePath, "$destinationPath2/${file.name}")
+        count++
+        progress = "Collected $count/${totalPhotos / 2} files"
     }
 }
 
-fun deleteEverythingExcept(dir: Int){
+fun deleteEverythingExcept(dir: Int) {
+    task = "Cleaning Up Extras"
+    var count = 0
     val destinationPath = "/storage/emulated/0/Pictures/Photify"
+    if (!exists(File("$destinationPath/dir1").toPath()) || !exists(File("$destinationPath/dir2").toPath())) {
+        mutableMimeType = "dir1 or dir2 doesn't exist"
+        mutableCommand = exit
+        return
+    }
     val files = RunCommand.shell("ls $destinationPath")
     val filesArray = files.split("\n").toTypedArray()
     for (file in filesArray) {
         if (file != "dir1" && file != "dir2") {
             deleteWithShell("$destinationPath/$file")
+            count++
+            progress = "Deleted $count/$totalPhotos files"
         }
     }
+    task = "Deleting Watermarked Photos Directory"
     if (dir == 1) {
         deleteWithShell("$destinationPath/dir2")
         val tempDestinationPath = "$destinationPath/dir1"
@@ -129,6 +142,7 @@ fun deleteEverythingExcept(dir: Int){
         for (file in tempFilesArray) {
             copyWithShell("$tempDestinationPath/$file", "$destinationPath/$file")
         }
+        task = "Deleting Empty Directory"
         deleteWithShell("$destinationPath/dir1")
     } else if (dir == 2) {
         deleteWithShell("$destinationPath/dir1")
@@ -139,5 +153,7 @@ fun deleteEverythingExcept(dir: Int){
             copyWithShell("$tempDestinationPath/$file", "$destinationPath/$file")
         }
         deleteWithShell("$destinationPath/dir2")
+        // "/storage/emulated/0/Pictures/Photify" rename Photify folder to Photify1
+        RunCommand.shell("mv $destinationPath $destinationPath" + "1")
     }
 }

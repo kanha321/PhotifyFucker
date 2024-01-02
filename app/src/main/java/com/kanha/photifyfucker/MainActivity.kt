@@ -1,141 +1,174 @@
 package com.kanha.photifyfucker
 
+import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.kanha.photifyfucker.RunCommand.isRooted
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kanha.photifyfucker.composables.Toolbar
+import com.kanha.photifyfucker.res.accuratist
 import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
-import com.kanha.savefile.DESTINATION_PATH
-import com.kanha.savefile.commonFileExtensions
+import com.kanha.photifyfucker.viewModels.MainActivityViewModel
+import com.kanha.photifyfucker.res.progress
+import com.kanha.photifyfucker.res.task
+import com.kanha.photifyfucker.util.checkRootOnHost
+import com.kanha.photifyfucker.util.writeToFile
+import com.kanha.photifyfucker.util.MyToast
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-val androidVersion: String = "Android version: ${android.os.Build.VERSION.RELEASE}"
-var mutableMimeType by mutableStateOf(androidVersion)
-var mutableCommand by mutableStateOf("")
-var copyAll by mutableStateOf("Copy All")
-var progress by mutableStateOf("")
-var isCopying = false
+var showProgressBar = false
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-            setContent {
-                PhotifyFuckerTheme {
+        setContent {
+            PhotifyFuckerTheme {
                 // A surface container using the 'background' color from the theme
+
+                val viewModel = viewModel<MainActivityViewModel>()
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Box(
-                        contentAlignment = Alignment.Center
+                    Column(
+                        Modifier.padding(top = 180.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column {
-                            Text(text = mutableMimeType)
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(
-                                modifier = Modifier.width(190.dp),
-                                onClick = {
-                                    finishAffinity()
-                                },
+                        Text(
+                            text = task,
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = accuratist
+                        )
+                        Spacer(Modifier.height(28.dp))
+                        Text(
+                            text = progress,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center,
+                            fontFamily = accuratist
+                        )
+                    }
+                    Column {
+                        TBar(this@MainActivity)
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "Exit")
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text(text = "Root access: ${isRooted()}")
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text(text = mutableCommand)
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(
-                                modifier = Modifier.width(190.dp),
-                                onClick = {
-                                    GlobalScope.launch(Dispatchers.IO) { // launch a new coroutine in background and continue
-                                        mutableMimeType = RunCommand.shell(mutableCommand)
-                                            .ifBlank { "$androidVersion ✔" }
-                                    }
-                                },
-                            ) {
-                                Text(text = "Retry last command")
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(
-                                modifier = Modifier.width(190.dp),
-                                onClick = {
-                                    if (!isCopying) {
-                                        GlobalScope.launch(Dispatchers.IO) { // launch a new coroutine in background and continue
-                                            copyAllPhotify()
-                                        }
-                                    } else {
-                                        copyAll = "Wait Bitch!!"
-                                    }
-                                },
-                            ) {
-                                Text(text = copyAll)
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text(text = progress)
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(
-                                modifier = Modifier.width(190.dp),
-                                onClick = {
-                                    GlobalScope.launch {
-                                        separateAlternately()
-                                    }
-                                },
-                            ) {
-                                Text(text = "Separate Alternately")
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row (
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Button(
+                                MyButton(
+                                    text = "Save All",
                                     onClick = {
                                         GlobalScope.launch {
-                                            deleteEverythingExcept(1)
+                                            viewModel.getAllImages()
                                         }
-                                    },
-                                ) {
-                                    Text(text = "dir1")
-                                }
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Button(
+                                    }
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                MyButton(
+                                    text = "Refresh Tokens",
                                     onClick = {
                                         GlobalScope.launch {
-                                            deleteEverythingExcept(2)
+                                            viewModel.renew(this@MainActivity)
                                         }
-                                    },
-                                ) {
-                                    Text(text = "dir2")
-                                }
+                                    }
+                                )
                             }
+                        }
+                    }
+                    Box(
+                        contentAlignment = Alignment.BottomCenter,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(bottom = 200.dp)
+                        ) {
+                            // progress bar
+                            if (showProgressBar)
+                                CircularProgressIndicator()
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun MyButton(text: String, onClick: () -> Unit) {
+    Button(
+        onClick = {
+            onClick()
+        },
+        shape = RoundedCornerShape(30)
+    ) {
+        Text(
+            text = text,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = accuratist
+        )
+    }
+}
+
+@Composable
+fun TBar(context: Context) {
+    Toolbar(context) {
+        IconButton(onClick = {
+            CoroutineScope(Dispatchers.Main).launch {
+                val rootStatus = withContext(Dispatchers.IO) {
+                    checkRootOnHost()
+                }
+                MyToast.show(context, rootStatus)
+            }
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.round_tag_24),
+                contentDescription = "check Root",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        }
+        IconButton(onClick = {
+            context.startActivity(Intent(context, TerminalActivity::class.java))
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.outline_terminal_24),
+                contentDescription = "Terminal",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
         }
     }
 }

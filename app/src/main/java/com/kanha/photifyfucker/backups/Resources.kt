@@ -1,5 +1,9 @@
 package com.kanha.savefile
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
 val commonFileExtensions = arrayOf(
     "jpg",
     "png",
@@ -39,5 +43,3 @@ val commonFileExtensions = arrayOf(
     "jar",
     "iso",
 )
-
-val DESTINATION_PATH = "/storage/emulated/0/SavedFiles"
