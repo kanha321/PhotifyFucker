@@ -10,6 +10,7 @@ import com.kanha.photifyfucker.res.isCopying
 import com.kanha.photifyfucker.res.progress
 import com.kanha.photifyfucker.res.task
 import com.kanha.photifyfucker.showProgressBar
+import com.kanha.photifyfucker.util.RunCommand
 import com.kanha.photifyfucker.util.clearData
 import com.kanha.photifyfucker.util.copyAllPhotify
 import com.kanha.photifyfucker.util.createData
@@ -37,11 +38,15 @@ class MainActivityViewModel : ViewModel() {
         }
     }
     fun renew(context: Context){
+        showProgressBar = true
         terminateApp()
         clearData()
-        createData()
+//        createData()
         writeToFileShell(context)
+        // launch ai.photify.app
+        RunCommand.shell("monkey -p ai.photify.app -c android.intent.category.LAUNCHER 1")
         task = "Finished"
+        showProgressBar = false
         progress = "o ___ o"
     }
 }

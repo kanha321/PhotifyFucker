@@ -10,7 +10,7 @@ var userID = getRandomID()
 var sharedPref = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n" +
         "<map>\n" +
         "    <string name=\"userId\">${userID}</string>\n" +
-        "    <boolean name=\"onboardingShown\" value=\"false\" />\n" +
+        "    <boolean name=\"onboardingShown\" value=\"true\" />\n" +
         "</map>\n"
 
 var SESSION_LOG by mutableStateOf("session.log\n\n")

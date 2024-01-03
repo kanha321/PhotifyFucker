@@ -43,20 +43,10 @@ fun terminateApp() {
 
 fun createData(){
     task = "Preparing Stuffs"
-    progress = "0/5"
-    RunCommand.shell("mkdir $internalDataPath")
-    progress = "1/5"
-//    RunCommand.shell("mkdir $externalDataPath")
-    progress = "2/5"
-    RunCommand.shell("mkdir $internalDataPath/code_cache/")
-    RunCommand.shell("chmod 771 $internalDataPath/code_cache/")
-    progress = "3/5"
-    RunCommand.shell("mkdir $internalDataPath/cache/")
-    RunCommand.shell("chmod 771 $internalDataPath/cache/")
-    progress = "4/5"
-    RunCommand.shell("mkdir $internalDataPath/shared_prefs/")
-    RunCommand.shell("chmod 771 $internalDataPath/shared_prefs/")
-    progress = "5/5"
+//    var count = 0
+//    val total = 5
+//    progress = "$count/$total"
+
 }
 
 fun clearData(){
