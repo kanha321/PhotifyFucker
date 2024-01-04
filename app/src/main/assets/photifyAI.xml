@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <map>
-    <string name="userId">c3fb63ee21634144</string>
-    <boolean name="onboardingShown" value="true" />
+    <string name=\"userId\">0123456789abcdef</string>
+    <boolean name=\"onboardingShown\" value=\"true\" />
+    <boolean name=\"isPrem\" value=\"true\" />
 </map>

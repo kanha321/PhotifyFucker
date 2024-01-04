@@ -1,10 +1,13 @@
 package com.kanha.photifyfucker.util
 
+import android.util.Log
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
 object RunCommand {
+
+    private const val TAG = "RunCommand"
 
     fun shell(
         command: String,
@@ -56,6 +59,7 @@ object RunCommand {
 
             if (updateSessionLog)
                 appendLogs(output.toString().trim(), error.toString().trim(), command.trim())
+//            Log.d(TAG, "shell: ${error.toString().trim() + output.toString().trim()}")
 
             return error.toString().trim() + output.toString().trim()
 

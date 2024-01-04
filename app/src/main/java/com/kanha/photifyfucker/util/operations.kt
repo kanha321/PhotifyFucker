@@ -1,7 +1,10 @@
 package com.kanha.photifyfucker.util
 
 import android.annotation.SuppressLint
+import android.content.Context
 import com.kanha.photifyfucker.res.*
+import java.io.IOException
+import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 
 @SuppressLint("SimpleDateFormat")
@@ -13,7 +16,7 @@ fun appendLogs(output: String, error: String, command: String) {
     val sessionLog = "$timeLine$commandText$output$error\n---------------------------------------\n\n"
     val outputLog  = "$timeLine$commandText$output\n---------------------------------------\n\n"
     val errorLog   = "$timeLine$commandText$error\n---------------------------------------\n\n"
-    val commands = "$commandTime> $command\n"
+    val commands = "$commandTime> $command\n\n"
     COMMANDS += commands
     if (output.isNotBlank() || error.isNotBlank())
         SESSION_LOG += sessionLog
@@ -31,8 +34,19 @@ fun checkRootOnHost(): String {
     }
     return if (output.contains("Permission denied"))
         "Root Permission Denied"
-    else if (output.contains("Failed"))
+    else if (output == "Failed")
         "This device is not rooted"
     else
         "Root access granted"
+}
+
+fun readFileFromAssets(context: Context, fileName: String): String {
+    return try {
+        val inputStream = context.assets.open(fileName)
+        val reader = InputStreamReader(inputStream)
+        reader.readText()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        ""
+    }
 }

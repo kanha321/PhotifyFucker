@@ -25,10 +25,10 @@ fun ScrollableText(
         modifier = Modifier
             .padding(16.dp)
             .border(2.dp, Color.Gray)
+            .then(modifier)
 //            .heightIn(max = 15 * 20.dp) // 20dp is the default line height
             .background(Color.Black)
-            .padding(16.dp)
-            .then(modifier),
+            .padding(16.dp),
         reverseLayout = true // Scroll to bottom by default
     ) {
         item {

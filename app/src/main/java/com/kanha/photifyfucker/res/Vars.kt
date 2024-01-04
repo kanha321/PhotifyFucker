@@ -5,13 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.kanha.photifyfucker.util.getRandomID
 
-var userID = getRandomID()
-
-var sharedPref = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n" +
-        "<map>\n" +
-        "    <string name=\"userId\">${userID}</string>\n" +
-        "    <boolean name=\"onboardingShown\" value=\"true\" />\n" +
-        "</map>\n"
+//var sharedPref = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n" +
+//        "<map>\n" +
+//        "    <string name=\"userId\">${userID}</string>\n" +
+//        "    <boolean name=\"onboardingShown\" value=\"true\" />\n" +
+//        "    <boolean name=\"isPrem\" value=\"true\" />\n" +
+//        "</map>\n"
 
 var SESSION_LOG by mutableStateOf("session.log\n\n")
 var OUTPUT_LOG by mutableStateOf("output.log\n\n")

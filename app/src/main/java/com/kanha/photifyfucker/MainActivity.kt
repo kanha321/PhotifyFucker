@@ -7,11 +7,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,16 +37,13 @@ import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
 import com.kanha.photifyfucker.viewModels.MainActivityViewModel
 import com.kanha.photifyfucker.res.progress
 import com.kanha.photifyfucker.res.task
-import com.kanha.photifyfucker.util.checkRootOnHost
-import com.kanha.photifyfucker.util.writeToFile
-import com.kanha.photifyfucker.util.MyToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 var showProgressBar = false
+var showAppIcon = false
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +59,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column(
-                        Modifier.padding(top = 180.dp)
+                        Modifier
+                            .padding(top = 180.dp)
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -91,20 +91,48 @@ class MainActivity : ComponentActivity() {
                                 MyButton(
                                     text = "Save All",
                                     onClick = {
-                                        GlobalScope.launch {
+                                        CoroutineScope(Dispatchers.Main).launch {
                                             viewModel.getAllImages()
                                         }
                                     }
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
-                                MyButton(
-                                    text = "Refresh Tokens",
-                                    onClick = {
-                                        GlobalScope.launch {
-                                            viewModel.renew(this@MainActivity)
+                                Text("Refresh Tokens", fontSize = 24.sp)
+//                                Spacer(modifier = Modifier.height(16.dp))
+//                                Text("Method 1", fontSize = 16.sp)
+//                                Spacer(modifier = Modifier.height(8.dp))
+//                                Row {
+//                                    MyButton(
+//                                        text = "Generate",
+//                                        onClick = {
+//                                            CoroutineScope(Dispatchers.Main).launch {
+//                                                viewModel.renew(context = this@MainActivity)
+//                                            }
+//                                        }
+//                                    )
+//                                }
+//                                Spacer(modifier = Modifier.height(16.dp))
+//                                Text("Method 2", fontSize = 16.sp)
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row {
+                                    MyButton(
+                                        text = "Prepare",
+                                        onClick = {
+                                            CoroutineScope(Dispatchers.Main).launch {
+                                                viewModel.renew1(this@MainActivity)
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    MyButton(
+                                        text = "Regenerate",
+                                        onClick = {
+                                            CoroutineScope(Dispatchers.Main).launch {
+                                                viewModel.renew2(this@MainActivity)
+                                            }
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -119,6 +147,33 @@ class MainActivity : ComponentActivity() {
                             // progress bar
                             if (showProgressBar)
                                 CircularProgressIndicator()
+                            if (showAppIcon) {
+//                                Image(
+//                                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+//                                    contentDescription = "App Icon",
+//                                    modifier = Modifier.size(100.dp)
+//                                        .clickable {
+//                                            CoroutineScope(Dispatchers.Main).launch {
+//                                                val output = withContext(Dispatchers.IO) {
+//                                                    viewModel.launchPhotify()
+//                                                }
+//                                            }
+//                                        }
+//                                )
+                                IconButton(onClick = {
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        val output = withContext(Dispatchers.IO) {
+                                            viewModel.launchPhotify()
+                                        }
+                                    }
+                                }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                                        contentDescription = "App Icon",
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -148,12 +203,13 @@ fun MyButton(text: String, onClick: () -> Unit) {
 fun TBar(context: Context) {
     Toolbar(context) {
         IconButton(onClick = {
-            CoroutineScope(Dispatchers.Main).launch {
-                val rootStatus = withContext(Dispatchers.IO) {
-                    checkRootOnHost()
-                }
-                MyToast.show(context, rootStatus)
-            }
+//            CoroutineScope(Dispatchers.Main).launch {
+//                val rootStatus = withContext(Dispatchers.IO) {
+//                    checkRootOnHost()
+//                }
+//                MyToast.show(context, rootStatus)
+//            }
+            context.startActivity(Intent(context, DeviceIDActivity::class.java))
         }) {
             Icon(
                 painter = painterResource(id = R.drawable.round_tag_24),

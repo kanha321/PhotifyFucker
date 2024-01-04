@@ -3,23 +3,44 @@ package com.kanha.photifyfucker
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.os.Bundle
+import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
+import com.kanha.photifyfucker.composables.DropDownMenu
 import com.kanha.photifyfucker.composables.ScrollableText
+import com.kanha.devicecontrol.extensions.clearString
 import com.kanha.photifyfucker.composables.Toolbar
 import com.kanha.photifyfucker.res.COMMANDS
 import com.kanha.photifyfucker.res.ERROR_LOG
 import com.kanha.photifyfucker.res.OUTPUT_LOG
+import com.kanha.photifyfucker.util.RunCommand
 import com.kanha.photifyfucker.res.SELECTED_LOG_TYPE
 import com.kanha.photifyfucker.res.SESSION_LOG
 import com.kanha.photifyfucker.res.commands
@@ -27,16 +48,26 @@ import com.kanha.photifyfucker.res.errorLog
 import com.kanha.photifyfucker.res.outputLog
 import com.kanha.photifyfucker.res.sessionLog
 import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
-import com.kanha.photifyfucker.util.checkRootOnHost
 import com.kanha.photifyfucker.util.MyToast
+import com.kanha.photifyfucker.util.changeUserID
+import com.kanha.photifyfucker.util.checkRootOnHost
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+var commandsText by mutableStateOf("")
+var output by mutableStateOf("")
+
+private const val TAG = "TerminalActivity"
+
 class TerminalActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
         setContent {
             PhotifyFuckerTheme {
                 // A surface container using the 'background' color from the theme
@@ -51,19 +82,12 @@ class TerminalActivity : ComponentActivity() {
                         ) {
                             val showMenu = remember { mutableStateOf(false) }
                             IconButton(onClick = {
-                                // check if device is rooted
-                                try {
-                                    CoroutineScope(Dispatchers.Main).launch {
-                                        val rootStatus = withContext(Dispatchers.IO) {
-                                            checkRootOnHost()
-                                        }
-                                        MyToast.show(this@TerminalActivity, rootStatus)
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    val rootStatus = withContext(Dispatchers.IO) {
+                                        checkRootOnHost()
                                     }
-                                } catch (e: Exception) {
-                                    MyToast.show(
-                                        this@TerminalActivity,
-                                        "Device probably not Rooted"
-                                    )
+                                    MyToast.show(this@TerminalActivity, rootStatus)
+//                                changeUserID()
                                 }
                             }) {
                                 Icon(
@@ -73,12 +97,13 @@ class TerminalActivity : ComponentActivity() {
                                 )
                             }
                             IconButton(onClick = {
-                                val clipBoard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                val clipBoard =
+                                    getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                                 val clip = when (SELECTED_LOG_TYPE) {
-                                    sessionLog -> ClipData.newPlainText("Session Log", SESSION_LOG)
-                                    outputLog -> ClipData.newPlainText("Output Log", OUTPUT_LOG)
-                                    errorLog -> ClipData.newPlainText("Error Log", ERROR_LOG)
-                                    commands -> ClipData.newPlainText("Commands", COMMANDS)
+                                    sessionLog -> ClipData.newPlainText(sessionLog, SESSION_LOG)
+                                    outputLog -> ClipData.newPlainText(outputLog, OUTPUT_LOG)
+                                    errorLog -> ClipData.newPlainText(errorLog, ERROR_LOG)
+                                    commands -> ClipData.newPlainText(commands, COMMANDS)
                                     else -> ClipData.newPlainText("Error", "Something went wrong")
                                 }
                                 clipBoard.setPrimaryClip(clip)
@@ -89,62 +114,104 @@ class TerminalActivity : ComponentActivity() {
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                 )
                             }
-//                            IconButton(onClick = {
+                            IconButton(onClick = {
 //                                showMenu.value = !showMenu.value
-//                            }) {
-//                                Icon(
-//                                    painter = painterResource(id = R.drawable.baseline_refresh_24),
-//                                    contentDescription = "Refresh",
-//                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-//                                )
-//                            }
-//                            AnimatedVisibility(
-//                                visible = showMenu.value,
-//                                enter = fadeIn(animationSpec = tween(30)),
-//                                exit = fadeOut(animationSpec = tween(30)),
-//                                modifier = Modifier.offset(y = 31.dp)
-//                            ) {
-//                                DropdownMenu(
-//                                    expanded = showMenu.value,
-//                                    onDismissRequest = { showMenu.value = false }
-//                                ) {
-//                                    DropdownMenuItem(onClick = {
-//                                        ACTIVE_LOG = SESSION_LOG
-//                                        showMenu.value = false
-//                                    }, text = {
-//                                        Text("Session Log")
-//                                    })
-//                                    DropdownMenuItem(onClick = {
-//                                        ACTIVE_LOG = OUTPUT_LOG
-//                                        showMenu.value = false
-//                                    }, text = {
-//                                        Text("Output Log")
-//                                    })
-//                                    DropdownMenuItem(onClick = {
-//                                        ACTIVE_LOG = ERROR_LOG
-//                                        showMenu.value = false
-//                                    }, text = {
-//                                        Text("Error Log")
-//                                    })
-//                                    DropdownMenuItem(onClick = {
-//                                        ACTIVE_LOG = COMMANDS
-//                                        showMenu.value = false
-//                                    }, text = {
-//                                        Text("Commands")
-//                                    })
-//                                }
-//                            }
+                                RunCommand.shell("cat /data/system/users/0/settings_ssaid.xml")
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.baseline_refresh_24),
+                                    contentDescription = "Refresh",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                )
+                            }
                         }
-                        ScrollableText(
-                            output = when (SELECTED_LOG_TYPE) {
-                                sessionLog -> SESSION_LOG
-                                outputLog -> OUTPUT_LOG
-                                errorLog -> ERROR_LOG
-                                commands -> COMMANDS
-                                else -> "Something went wrong"
-                            },
-                            modifier = Modifier.fillMaxSize()
-                        )
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            var logType by remember {
+                                mutableStateOf(SESSION_LOG)
+                            }
+                            ScrollableText(
+                                output = when (SELECTED_LOG_TYPE) {
+                                    sessionLog -> SESSION_LOG
+                                    outputLog -> OUTPUT_LOG
+                                    errorLog -> ERROR_LOG
+                                    commands -> COMMANDS
+                                    else -> SESSION_LOG
+                                },
+                                modifier = Modifier
+                                    .heightIn(max = 14 * 20.dp) // 20dp is the default line height
+                                    .fillMaxSize()
+                                    .align(Alignment.BottomCenter),
+//                            onClick = {
+//                                // copy logs to clipboard
+//                                val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+//                                val clip = when (SELECTED_LOG_TYPE) {
+//                                    "Session Log" -> ClipData.newPlainText("Session Log", SESSION_LOG)
+//                                    "Output Log" -> ClipData.newPlainText("Output Log", OUTPUT_LOG)
+//                                    "Error Log" -> ClipData.newPlainText("Error Log", ERROR_LOG)
+//                                    else -> ClipData.newPlainText("Error", "Something went wrong")
+//                                }
+//                                clipboard.setPrimaryClip(clip)
+//                            }
+                            )
+                            Column {
+                                DropDownMenu(
+                                    items = ArrayList<String>().apply {
+                                        add(sessionLog)
+                                        add(outputLog)
+                                        add(errorLog)
+                                        add(commands)
+                                    },
+                                    label = "Session Log",
+                                    onValueChange = {
+                                        Log.d(TAG, "onCreate DropDownMenu: $logType")
+                                        logType = when (it) {
+                                            sessionLog -> SESSION_LOG
+                                            outputLog -> OUTPUT_LOG
+                                            errorLog -> ERROR_LOG
+                                            commands -> COMMANDS
+                                            else -> SESSION_LOG
+                                        }
+                                    }
+                                )
+                                OutlinedTextField(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(
+                                            top = 0.dp,
+                                            bottom = 20.dp,
+                                            start = 20.dp,
+                                            end = 20.dp
+                                        ),
+                                    value = commandsText,
+                                    onValueChange = {
+                                        commandsText = it
+                                    },
+                                    singleLine = true,
+                                    label = { Text("Run Shell Commands") },
+                                    readOnly = false,
+                                    keyboardOptions = KeyboardOptions(
+                                        imeAction = ImeAction.Done,
+                                        keyboardType = KeyboardType.Text
+                                    ),
+                                    keyboardActions = KeyboardActions(
+                                        onDone = {
+                                            output = RunCommand.shell(commandsText)
+                                            if (commandsText == "clear") {
+                                                SESSION_LOG = "session.log\n\n"
+                                                OUTPUT_LOG = "output.log\n\n"
+                                                ERROR_LOG = "error.log\n\n"
+                                            }
+                                            commandsText = ""
+                                        }
+                                    )
+                                )
+                                Text(text = output.clearString())
+                            }
+                        }
                     }
                 }
             }
