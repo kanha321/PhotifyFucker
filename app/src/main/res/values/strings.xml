@@ -3,4 +3,5 @@
     <string name="title_activity_main2">MainActivity2</string>
     <string name="title_activity_terminal">TerminalActivity</string>
     <string name="title_activity_device_idactivity">DeviceIDActivity</string>
+    <string name="title_activity_get_photify">GetPhotify</string>
 </resources>

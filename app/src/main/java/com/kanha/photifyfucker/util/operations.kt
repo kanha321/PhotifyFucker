@@ -2,8 +2,11 @@ package com.kanha.photifyfucker.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.kanha.photifyfucker.res.*
 import java.io.IOException
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 
@@ -49,4 +52,15 @@ fun readFileFromAssets(context: Context, fileName: String): String {
         e.printStackTrace()
         ""
     }
+}
+
+fun loadBitmapFromRootAccess(filePath: String): Bitmap? {
+    try {
+        val processOutput = RunCommand.shell("cat $filePath")
+        val inputStream: InputStream = processOutput.byteInputStream()
+        return BitmapFactory.decodeStream(inputStream)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return null
 }

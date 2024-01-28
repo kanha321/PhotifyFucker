@@ -64,6 +64,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(platform(libs.compose.bom))
     implementation(platform(libs.compose.bom))
+    implementation(platform(libs.compose.bom))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -73,8 +74,10 @@ dependencies {
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(platform(libs.compose.bom))
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("org.ocpsoft.prettytime:prettytime:4.0.1.Final")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }

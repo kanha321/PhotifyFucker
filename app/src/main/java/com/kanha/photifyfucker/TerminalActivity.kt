@@ -116,7 +116,6 @@ class TerminalActivity : ComponentActivity() {
                             }
                             IconButton(onClick = {
 //                                showMenu.value = !showMenu.value
-                                RunCommand.shell("cat /data/system/users/0/settings_ssaid.xml")
                             }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.baseline_refresh_24),
