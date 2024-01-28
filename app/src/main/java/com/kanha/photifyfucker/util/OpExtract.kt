@@ -19,10 +19,10 @@ fun copyWithShell(sourcePath: String, destinationPath: String) {
     mutableCommand = command
     Log.d(TAG, "copyFile: $command")
     val result = RunCommand.shell(command, updateSessionLog = true)
-    if (result.isNotEmpty()) {
-        mutableMimeType = "Error copying file: $result"
+    mutableMimeType = if (result.isNotEmpty()) {
+        "Error copying file: $result"
     } else {
-        mutableMimeType = "File copied successfully"
+        "File copied successfully"
     }
 }
 
@@ -60,7 +60,7 @@ fun copyAllPhotify() {
     val filesArray = files.split("\n").toTypedArray()
     val jpgFiles = ArrayList<File>()
     for (file in filesArray) {
-        if (file.startsWith("jpg")) {
+        if (file.startsWith("photify")) {
             jpgFiles.add(File("$dir$file"))
         }
     }
@@ -68,7 +68,7 @@ fun copyAllPhotify() {
     copyAll = "Copying ${jpgFiles.size} files"
     // copy all files to the destination
     for (file in jpgFiles) {
-        copyWithShell(file.absolutePath, "$destinationPath/saved_${file.name}.jpg")
+        copyWithShell(file.absolutePath, "$destinationPath/saved_${file.name}")
         count++
         progress = "Copied $count/${jpgFiles.size} files"
     }

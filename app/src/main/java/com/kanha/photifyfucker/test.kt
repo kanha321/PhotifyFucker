@@ -30,6 +30,23 @@ fun replaceStringInFile(filePath: String) {
 fun main() {
 //    val filePath = "/home/ascalon/AndroidStudioProjects/PhotifyFucker/app/src/main/assets/settings_ssaid.xml"
 //    replaceStringInFile(filePath)
-    println(getRandomID(16))
+//    println(getRandomID(16))
 //    println(RunCommand.shell("cat $filePath", asRoot = false))
+
+    val xml = """
+        <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="currIdentityPhoto">{&quot;url&quot;:&quot;https://exh-photify.s3.us-west-2.amazonaws.com/identity_images/66694a0d9af5c543/a44b2e2e086aa03fb4bbda2302b74ec9.jpg&quot;,&quot;identity_image_id&quot;:&quot;104f74be-665b-4a26-936b-9e6439a22aa0&quot;,&quot;gender&quot;:&quot;Woman&quot;,&quot;skin_tone&quot;:&quot;White&quot;}</string>
+    <boolean name="onboardingShown" value="true" />
+    <boolean name="isPrem" value="false" />
+    <long name="sessionCount" value="14" />
+    <boolean name="inviteFriendShown" value="true" />
+    <string name="identityPhotos">[{&quot;url&quot;:&quot;https://exh-photify.s3.us-west-2.amazonaws.com/identity_images/99b94a0d9af5c587/a44b2e2e086aa03fb4bbda2302b74ec9.jpg&quot;,&quot;identity_image_id&quot;:&quot;e036beed-4352-4cc4-8fd5-e46f237db15b&quot;,&quot;gender&quot;:&quot;Woman&quot;,&quot;skin_tone&quot;:&quot;White&quot;},[{&quot;file_name&quot;:&quot;photify_1706381154493
+    """.trimIndent()
+
+    val regex = "<string name=\"currIdentityPhoto\">\\{.*?\\}</string>".toRegex()
+
+    val updatedString = xml.replaceFirst(regex, "")
+
+    println(updatedString)
 }

@@ -3,7 +3,6 @@ package com.kanha.photifyfucker.res
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.kanha.photifyfucker.util.getRandomID
 
 //var sharedPref = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n" +
 //        "<map>\n" +
@@ -11,6 +10,8 @@ import com.kanha.photifyfucker.util.getRandomID
 //        "    <boolean name=\"onboardingShown\" value=\"true\" />\n" +
 //        "    <boolean name=\"isPrem\" value=\"true\" />\n" +
 //        "</map>\n"
+
+var photifyAIXML = ""
 
 var SESSION_LOG by mutableStateOf("session.log\n\n")
 var OUTPUT_LOG by mutableStateOf("output.log\n\n")
@@ -37,5 +38,8 @@ var progress by mutableStateOf("")
 var isCopying = false
 var totalPhotos: Int = 0
 
-var internalDataPath = if (android.os.Build.VERSION.SDK_INT < 30) "/data/data/ai.photify.app" else "/data_mirror/data_ce/null/0/ai.photify.app"
-var externalDataPath = "/storage/emulated/0/Android/data/ai.photify.app"
+var photifyInternalDataPath = if (android.os.Build.VERSION.SDK_INT < 30) "/data/data/ai.photify.app" else "/data_mirror/data_ce/null/0/ai.photify.app"
+var photifyExternalDataPath = "/storage/emulated/0/Android/data/ai.photify.app"
+
+var fuckerInternalDataPath = if (android.os.Build.VERSION.SDK_INT < 30) "/data/data/com.kanha.photifyfucker" else "/data_mirror/data_ce/null/0/com.kanha.photifyfucker"
+var fuckerInternalFilePath = "$fuckerInternalDataPath/files"

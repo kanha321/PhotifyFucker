@@ -33,12 +33,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kanha.photifyfucker.composables.Toolbar
 import com.kanha.photifyfucker.res.accuratist
+import com.kanha.photifyfucker.res.photifyAIXML
 import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
 import com.kanha.photifyfucker.viewModels.MainActivityViewModel
 import com.kanha.photifyfucker.res.progress
 import com.kanha.photifyfucker.res.task
+import com.kanha.photifyfucker.util.storeXMLData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -48,6 +51,7 @@ var showAppIcon = false
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        photifyAIXML = storeXMLData()
         setContent {
             PhotifyFuckerTheme {
                 // A surface container using the 'background' color from the theme
@@ -91,13 +95,13 @@ class MainActivity : ComponentActivity() {
                                 MyButton(
                                     text = "Save All",
                                     onClick = {
-                                        CoroutineScope(Dispatchers.Main).launch {
+                                        GlobalScope.launch {
                                             viewModel.getAllImages()
                                         }
                                     }
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
-                                Text("Refresh Tokens", fontSize = 24.sp)
+//                                Text("Refresh Tokens", fontSize = 24.sp)
 //                                Spacer(modifier = Modifier.height(16.dp))
 //                                Text("Method 1", fontSize = 16.sp)
 //                                Spacer(modifier = Modifier.height(8.dp))
@@ -113,25 +117,25 @@ class MainActivity : ComponentActivity() {
 //                                }
 //                                Spacer(modifier = Modifier.height(16.dp))
 //                                Text("Method 2", fontSize = 16.sp)
-                                Spacer(modifier = Modifier.height(8.dp))
+//                                Spacer(modifier = Modifier.height(8.dp))
                                 Row {
                                     MyButton(
-                                        text = "Prepare",
+                                        text = "Regenerate",
                                         onClick = {
-                                            CoroutineScope(Dispatchers.Main).launch {
+                                            GlobalScope.launch {
                                                 viewModel.renew1(this@MainActivity)
                                             }
                                         }
                                     )
-                                    Spacer(modifier = Modifier.width(16.dp))
-                                    MyButton(
-                                        text = "Regenerate",
-                                        onClick = {
-                                            CoroutineScope(Dispatchers.Main).launch {
-                                                viewModel.renew2(this@MainActivity)
-                                            }
-                                        }
-                                    )
+//                                    Spacer(modifier = Modifier.width(16.dp))
+//                                    MyButton(
+//                                        text = "Regenerate",
+//                                        onClick = {
+//                                            CoroutineScope(Dispatchers.Main).launch {
+//                                                viewModel.renew2(this@MainActivity)
+//                                            }
+//                                        }
+//                                    )
                                 }
                             }
                         }
