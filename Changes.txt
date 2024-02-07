@@ -1,0 +1,8 @@
+4:10 AM 7th Feb 2024   v2.0 stable
+
+    added prompt option where user can see all the input prompt
+    added click prompt card to copy prompt to clipboard
+
+    generating token now automatically launches the app when finished
+    now it also copies the last prompt to clipboard when generating token
+
