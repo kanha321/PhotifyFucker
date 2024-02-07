@@ -11,7 +11,8 @@ import androidx.compose.runtime.setValue
 //        "    <boolean name=\"isPrem\" value=\"true\" />\n" +
 //        "</map>\n"
 
-var photifyAIXML = ""
+var photifyAIXML by mutableStateOf("")
+var prompts = arrayListOf("")
 
 var SESSION_LOG by mutableStateOf("session.log\n\n")
 var OUTPUT_LOG by mutableStateOf("output.log\n\n")
@@ -40,6 +41,8 @@ var totalPhotos: Int = 0
 
 var photifyInternalDataPath = if (android.os.Build.VERSION.SDK_INT < 30) "/data/data/ai.photify.app" else "/data_mirror/data_ce/null/0/ai.photify.app"
 var photifyExternalDataPath = "/storage/emulated/0/Android/data/ai.photify.app"
+
+var photifyStoragePath = "/storage/emulated/0/Pictures/PhotifyFucker"
 
 var fuckerInternalDataPath = if (android.os.Build.VERSION.SDK_INT < 30) "/data/data/com.kanha.photifyfucker" else "/data_mirror/data_ce/null/0/com.kanha.photifyfucker"
 var fuckerInternalFilePath = "$fuckerInternalDataPath/files"

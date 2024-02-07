@@ -3,7 +3,7 @@ package com.kanha.photifyfucker.util
 import android.content.Context
 import android.widget.Toast
 
-object MyToast {
+object KToast {
     private var toast: Toast? = null
     fun show(
         context: Context,

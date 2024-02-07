@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,8 +47,7 @@ import com.kanha.photifyfucker.res.errorLog
 import com.kanha.photifyfucker.res.outputLog
 import com.kanha.photifyfucker.res.sessionLog
 import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
-import com.kanha.photifyfucker.util.MyToast
-import com.kanha.photifyfucker.util.changeUserID
+import com.kanha.photifyfucker.util.KToast
 import com.kanha.photifyfucker.util.checkRootOnHost
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -86,7 +84,7 @@ class TerminalActivity : ComponentActivity() {
                                     val rootStatus = withContext(Dispatchers.IO) {
                                         checkRootOnHost()
                                     }
-                                    MyToast.show(this@TerminalActivity, rootStatus)
+                                    KToast.show(this@TerminalActivity, rootStatus)
 //                                changeUserID()
                                 }
                             }) {

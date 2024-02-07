@@ -1,12 +1,16 @@
 package com.kanha.photifyfucker.viewModels
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import com.kanha.photifyfucker.res.fuckerInternalFilePath
 import com.kanha.photifyfucker.res.isCopying
 import com.kanha.photifyfucker.res.photifyAIXML
 import com.kanha.photifyfucker.res.photifyInternalDataPath
 import com.kanha.photifyfucker.res.progress
+import com.kanha.photifyfucker.res.prompts
 import com.kanha.photifyfucker.res.task
 import com.kanha.photifyfucker.showAppIcon
 import com.kanha.photifyfucker.showProgressBar
@@ -17,6 +21,7 @@ import com.kanha.photifyfucker.util.copyAllPhotify
 import com.kanha.photifyfucker.util.copyWithShell
 import com.kanha.photifyfucker.util.deleteEverythingExcept
 import com.kanha.photifyfucker.util.deletePhotoData
+import com.kanha.photifyfucker.util.getPrompts
 import com.kanha.photifyfucker.util.separateAlternately
 import com.kanha.photifyfucker.util.terminateApp
 import com.kanha.photifyfucker.util.updateUserID
@@ -58,7 +63,13 @@ class MainActivityViewModel : ViewModel() {
         writeToFile(context = context, photifyAIXML)
         copyWithShell("$fuckerInternalFilePath/photifyAI.xml", "$photifyInternalDataPath/shared_prefs/photifyAI.xml")
         terminateApp()
-//        launchPhotify()
+
+        val clipBoard =
+            context.getSystemService(ComponentActivity.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("prompt", getPrompts()[0])
+        clipBoard.setPrimaryClip(clip)
+
+        launchPhotify()
 //        writeToFileShell(fileContents = "", context = context)
         // launch ai.photify.app
 //        task = "launching Photify"

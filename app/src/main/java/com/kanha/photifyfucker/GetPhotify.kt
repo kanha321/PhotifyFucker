@@ -20,7 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.kanha.photifyfucker.res.mutableMimeType
 import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
-import com.kanha.photifyfucker.util.MyToast
+import com.kanha.photifyfucker.util.KToast
 import com.kanha.photifyfucker.util.RunCommand
 import com.kanha.photifyfucker.util.getNonWaterMarkedImage
 import com.kanha.photifyfucker.util.getSharedFileName
@@ -36,7 +36,7 @@ class GetPhotify : ComponentActivity() {
 
         val filename = getSharedFileName(intent)
         getNonWaterMarkedImage(filename!!)
-        MyToast.show(this, mutableMimeType)
+        KToast.show(this, mutableMimeType)
         this.finishAffinity()
         setContent {
             PhotifyFuckerTheme {
@@ -45,7 +45,7 @@ class GetPhotify : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    ImageGrid(imageFiles)
+
                 }
             }
         }

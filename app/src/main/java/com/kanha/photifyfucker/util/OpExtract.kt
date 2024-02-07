@@ -1,6 +1,5 @@
 package com.kanha.photifyfucker.util
 
-import android.os.Build.VERSION.SDK_INT
 import android.util.Log
 import com.kanha.photifyfucker.res.*
 import java.io.File
@@ -8,7 +7,7 @@ import java.nio.file.Files.exists
 
 private const val TAG = "Ops"
 
-fun copyWithShell(sourcePath: String, destinationPath: String) {
+fun copyWithShell(sourcePath: String, destinationPath: String, updateSessionLog: Boolean = true) {
     var tempSourcePath = sourcePath
     if (sourcePath.startsWith("root")) {
         tempSourcePath = sourcePath.replace("root", "")
@@ -18,7 +17,7 @@ fun copyWithShell(sourcePath: String, destinationPath: String) {
     val command = "cp $tempSourcePath $destinationPath"
     mutableCommand = command
     Log.d(TAG, "copyFile: $command")
-    val result = RunCommand.shell(command, updateSessionLog = true)
+    val result = RunCommand.shell(command, updateSessionLog = updateSessionLog)
     mutableMimeType = if (result.isNotEmpty()) {
         "Error copying file: $result"
     } else {
@@ -31,25 +30,54 @@ fun deleteWithShell(path: String) {
     mutableCommand = command
     Log.d(TAG, "deleteWithShell: $command")
     val result = RunCommand.shell(command)
-    if (result.isNotEmpty()) {
-        mutableMimeType = "Error deleting: $result"
+    mutableMimeType = if (result.isNotEmpty()) {
+        "Error deleting: $result"
     } else {
-        mutableMimeType = "Deleted successfully"
+        "Deleted successfully"
     }
 }
 
+fun cherryPicImages(nonWatermarked: Boolean = true) {
+
+    var copy = nonWatermarked
+    var count = 0
+    task = "Extracting photos from Photify (Quick Mode)"
+    val dir = "$photifyInternalDataPath/files/"
+    val destinationPath = photifyStoragePath
+
+    if (!exists(File(destinationPath).toPath())) {
+        RunCommand.shell("mkdir $destinationPath")
+    }
+
+    val files = RunCommand.shell("ls $dir", updateSessionLog = false)
+    val filesArray = files.split("\n").toTypedArray()
+    val jpgFiles = ArrayList<File>()
+    for (file in filesArray) {
+        if (file.startsWith("photify")) {
+            jpgFiles.add(File("$dir$file"))
+        }
+    }
+    totalPhotos = jpgFiles.size
+    copyAll = "Copying ${jpgFiles.size/2} files"
+    for (file in jpgFiles) {
+        if (copy) {
+            copyWithShell(file.absolutePath, "$destinationPath/saved_${file.name}")
+            count++
+            progress = "Copied $count/${jpgFiles.size/2} files"
+        }
+        copy = !copy
+    }
+    task = "Finished"
+    progress = "o ___ o"
+}
 
 fun copyAllPhotify() {
     var count = 0
     task = "Extracting photos from Photify"
     // check if android version is 11 or above
-    val dir = if (SDK_INT >= 30) {
-        "/data_mirror/data_ce/null/0/ai.photify.app/files/"
-    } else {
-        "/data/data/ai.photify.app/files/"
-    }
+    val dir = "$photifyInternalDataPath/files/"
 
-    val destinationPath = "/storage/emulated/0/Pictures/Photify"
+    val destinationPath = photifyStoragePath
     // create a directory if it doesn't exist
     if (!exists(File(destinationPath).toPath())) {
         RunCommand.shell("mkdir $destinationPath")
@@ -77,7 +105,7 @@ fun copyAllPhotify() {
 fun separateAlternately() {
     var count = 0
     task = "Separating watermarked &\nnon-watermarked photos"
-    val destinationPath = "/storage/emulated/0/Pictures/Photify"
+    val destinationPath = photifyStoragePath
     // in this directory there are some files which select them alternately and store them in 2 separate arrays
     val files = RunCommand.shell("ls $destinationPath")
     val filesArray = files.split("\n").toTypedArray()
@@ -91,8 +119,8 @@ fun separateAlternately() {
         }
     }
     // create 2 directories (if it doesn't exist) to store the alternates named "dir1" and "dir2"
-    val destinationPath1 = "/storage/emulated/0/Pictures/Photify/dir1"
-    val destinationPath2 = "/storage/emulated/0/Pictures/Photify/dir2"
+    val destinationPath1 = "$photifyStoragePath/dir1"
+    val destinationPath2 = "$photifyStoragePath/dir2"
     if (!exists(File(destinationPath1).toPath())) {
         RunCommand.shell("mkdir $destinationPath1")
     }
@@ -118,7 +146,7 @@ fun separateAlternately() {
 fun deleteEverythingExcept(dir: Int) {
     task = "Cleaning Up Extras"
     var count = 0
-    val destinationPath = "/storage/emulated/0/Pictures/Photify"
+    val destinationPath = photifyStoragePath
     if (!exists(File("$destinationPath/dir1").toPath()) || !exists(File("$destinationPath/dir2").toPath())) {
         mutableMimeType = "dir1 or dir2 doesn't exist"
         mutableCommand = exit

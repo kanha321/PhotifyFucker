@@ -35,7 +35,7 @@ fun getXMLData(context: Context): String {
 }
 
 fun storeXMLData(xmlFilePath: String = "$photifyInternalDataPath/shared_prefs/photifyAI.xml"): String {
-    return RunCommand.shell("cat $xmlFilePath")
+    return RunCommand.shell("cat $xmlFilePath", updateSessionLog = false)
 }
 
 fun writeToFileShell(context: Context, fileContents: String = getXMLData(context)) {

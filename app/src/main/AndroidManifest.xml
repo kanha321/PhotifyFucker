@@ -13,18 +13,27 @@
         android:theme="@style/Theme.PhotifyFucker"
         tools:targetApi="31">
         <activity
+            android:name=".PromptsAct"
+            android:exported="false"
+            android:label="@string/title_activity_prompts"
+            android:theme="@style/Theme.PhotifyFucker" />
+        <activity
             android:name=".GetPhotify"
             android:exported="true"
             android:label="@string/title_activity_get_photify"
-            android:theme="@style/Theme.PhotifyFucker" >
+            android:theme="@style/Theme.PhotifyFucker">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="*/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>

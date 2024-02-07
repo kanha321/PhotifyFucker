@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,13 +30,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kanha.photifyfucker.composables.KCardSingle
 import com.kanha.photifyfucker.composables.Toolbar
 import com.kanha.photifyfucker.res.accuratist
 import com.kanha.photifyfucker.res.photifyAIXML
 import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
 import com.kanha.photifyfucker.viewModels.MainActivityViewModel
 import com.kanha.photifyfucker.res.progress
+import com.kanha.photifyfucker.res.prompts
 import com.kanha.photifyfucker.res.task
+import com.kanha.photifyfucker.util.cherryPicImages
+import com.kanha.photifyfucker.util.getPrompts
 import com.kanha.photifyfucker.util.storeXMLData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,9 +52,19 @@ var showProgressBar = false
 var showAppIcon = false
 
 class MainActivity : ComponentActivity() {
+
+    private fun init(){
+        photifyAIXML = storeXMLData()
+        prompts = getPrompts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        init()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        photifyAIXML = storeXMLData()
+        init()
         setContent {
             PhotifyFuckerTheme {
                 // A surface container using the 'background' color from the theme
@@ -92,51 +105,34 @@ class MainActivity : ComponentActivity() {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                MyButton(
-                                    text = "Save All",
+                                KCardSingle(
+                                    icon = painterResource(id = R.drawable.outline_file_download_24),
+                                    name = "Quickly Save All",
+                                    description = "Save all images generated without watermark",
                                     onClick = {
                                         GlobalScope.launch {
-                                            viewModel.getAllImages()
+                                            cherryPicImages()
                                         }
                                     }
                                 )
-                                Spacer(modifier = Modifier.height(16.dp))
-//                                Text("Refresh Tokens", fontSize = 24.sp)
-//                                Spacer(modifier = Modifier.height(16.dp))
-//                                Text("Method 1", fontSize = 16.sp)
-//                                Spacer(modifier = Modifier.height(8.dp))
-//                                Row {
-//                                    MyButton(
-//                                        text = "Generate",
-//                                        onClick = {
-//                                            CoroutineScope(Dispatchers.Main).launch {
-//                                                viewModel.renew(context = this@MainActivity)
-//                                            }
-//                                        }
-//                                    )
-//                                }
-//                                Spacer(modifier = Modifier.height(16.dp))
-//                                Text("Method 2", fontSize = 16.sp)
-//                                Spacer(modifier = Modifier.height(8.dp))
-                                Row {
-                                    MyButton(
-                                        text = "Regenerate",
-                                        onClick = {
-                                            GlobalScope.launch {
-                                                viewModel.renew1(this@MainActivity)
-                                            }
+                                KCardSingle(
+                                    icon = painterResource(id = R.drawable.baseline_refresh_24),
+                                    name = "Regenerate",
+                                    description = "Set number of token to 30",
+                                    onClick = {
+                                        GlobalScope.launch {
+                                            viewModel.renew1(this@MainActivity)
                                         }
-                                    )
-//                                    Spacer(modifier = Modifier.width(16.dp))
-//                                    MyButton(
-//                                        text = "Regenerate",
-//                                        onClick = {
-//                                            CoroutineScope(Dispatchers.Main).launch {
-//                                                viewModel.renew2(this@MainActivity)
-//                                            }
-//                                        }
-//                                    )
-                                }
+                                    }
+                                )
+                                KCardSingle(
+                                    icon = painterResource(id = R.drawable.outline_text_snippet_24),
+                                    name = "Prompts",
+                                    description = "All input prompts",
+                                    onClick = {
+                                        startActivity(Intent(this@MainActivity, PromptsAct::class.java))
+                                    }
+                                )
                             }
                         }
                     }
