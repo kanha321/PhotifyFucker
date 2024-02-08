@@ -1,4 +1,4 @@
-package com.kanha.photifyfucker
+package com.kanha.photifyfucker.backups
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import com.kanha.photifyfucker.R
 import com.kanha.photifyfucker.composables.ScrollableText
 import com.kanha.photifyfucker.composables.Toolbar
 import com.kanha.photifyfucker.res.COMMANDS

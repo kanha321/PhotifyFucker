@@ -48,7 +48,7 @@
             android:label="@string/title_activity_device_idactivity"
             android:theme="@style/Theme.PhotifyFucker" />
         <activity
-            android:name=".TerminalActivity2"
+            android:name=".backups.TerminalActivity2"
             android:exported="false"
             android:label="@string/title_activity_terminal"
             android:theme="@style/Theme.PhotifyFucker" />

@@ -78,15 +78,9 @@ class TerminalActivity : ComponentActivity() {
                             context = this@TerminalActivity,
                             title = "Logs"
                         ) {
-                            val showMenu = remember { mutableStateOf(false) }
+//                            val showMenu = remember { mutableStateOf(false) }
                             IconButton(onClick = {
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    val rootStatus = withContext(Dispatchers.IO) {
-                                        checkRootOnHost()
-                                    }
-                                    KToast.show(this@TerminalActivity, rootStatus)
-//                                changeUserID()
-                                }
+                                KToast.show(this@TerminalActivity, checkRootOnHost())
                             }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.round_tag_24),
@@ -112,15 +106,15 @@ class TerminalActivity : ComponentActivity() {
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                 )
                             }
-                            IconButton(onClick = {
-//                                showMenu.value = !showMenu.value
-                            }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.baseline_refresh_24),
-                                    contentDescription = "Refresh",
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                )
-                            }
+//                            IconButton(onClick = {
+////                                showMenu.value = !showMenu.value
+//                            }) {
+//                                Icon(
+//                                    painter = painterResource(id = R.drawable.baseline_refresh_24),
+//                                    contentDescription = "Refresh",
+//                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+//                                )
+//                            }
                         }
 
                         Box(
@@ -142,17 +136,6 @@ class TerminalActivity : ComponentActivity() {
                                     .heightIn(max = 14 * 20.dp) // 20dp is the default line height
                                     .fillMaxSize()
                                     .align(Alignment.BottomCenter),
-//                            onClick = {
-//                                // copy logs to clipboard
-//                                val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-//                                val clip = when (SELECTED_LOG_TYPE) {
-//                                    "Session Log" -> ClipData.newPlainText("Session Log", SESSION_LOG)
-//                                    "Output Log" -> ClipData.newPlainText("Output Log", OUTPUT_LOG)
-//                                    "Error Log" -> ClipData.newPlainText("Error Log", ERROR_LOG)
-//                                    else -> ClipData.newPlainText("Error", "Something went wrong")
-//                                }
-//                                clipboard.setPrimaryClip(clip)
-//                            }
                             )
                             Column {
                                 DropDownMenu(

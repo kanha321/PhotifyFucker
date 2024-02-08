@@ -39,6 +39,8 @@ import com.kanha.photifyfucker.viewModels.MainActivityViewModel
 import com.kanha.photifyfucker.res.progress
 import com.kanha.photifyfucker.res.prompts
 import com.kanha.photifyfucker.res.task
+import com.kanha.photifyfucker.util.KToast
+import com.kanha.photifyfucker.util.checkRootOnHost
 import com.kanha.photifyfucker.util.cherryPicImages
 import com.kanha.photifyfucker.util.getPrompts
 import com.kanha.photifyfucker.util.storeXMLData
@@ -203,13 +205,13 @@ fun MyButton(text: String, onClick: () -> Unit) {
 fun TBar(context: Context) {
     Toolbar(context) {
         IconButton(onClick = {
-//            CoroutineScope(Dispatchers.Main).launch {
-//                val rootStatus = withContext(Dispatchers.IO) {
-//                    checkRootOnHost()
-//                }
-//                MyToast.show(context, rootStatus)
-//            }
-            context.startActivity(Intent(context, DeviceIDActivity::class.java))
+            CoroutineScope(Dispatchers.Main).launch {
+                val rootStatus = withContext(Dispatchers.IO) {
+                    checkRootOnHost()
+                }
+                KToast.show(context, rootStatus)
+            }
+//            context.startActivity(Intent(context, DeviceIDActivity::class.java))
         }) {
             Icon(
                 painter = painterResource(id = R.drawable.round_tag_24),
