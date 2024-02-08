@@ -39,6 +39,7 @@ fun deleteWithShell(path: String) {
 
 fun cherryPicImages(nonWatermarked: Boolean = true) {
 
+    // faster method - this just leaves every second image since they are watermarked images
     var copy = nonWatermarked
     var count = 0
     task = "Extracting photos from Photify (Quick Mode)"
@@ -70,6 +71,8 @@ fun cherryPicImages(nonWatermarked: Boolean = true) {
     task = "Finished"
     progress = "o ___ o"
 }
+
+// unused functions (don't use in future as well, unless you know what you are doing)
 
 fun copyAllPhotify() {
     var count = 0

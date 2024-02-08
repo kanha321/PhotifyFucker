@@ -5,4 +5,6 @@
     <string name="title_activity_device_idactivity">DeviceIDActivity</string>
     <string name="title_activity_get_photify">GetPhotify</string>
     <string name="title_activity_prompts">PromptsAct</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_test">TestAct</string>
 </resources>

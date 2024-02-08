@@ -2,12 +2,12 @@ package com.kanha.photifyfucker
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,20 +30,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kanha.photifyfucker.activities.settings.SettingsActivity
+import com.kanha.photifyfucker.activities.settings.loadSettings
 import com.kanha.photifyfucker.composables.KCardSingle
 import com.kanha.photifyfucker.composables.Toolbar
+import com.kanha.photifyfucker.res.ThemeType
 import com.kanha.photifyfucker.res.accuratist
+import com.kanha.photifyfucker.res.darkTheme
+import com.kanha.photifyfucker.res.isDarkTheme
+import com.kanha.photifyfucker.res.isDynamicColor
+import com.kanha.photifyfucker.res.isSystemTheme
+import com.kanha.photifyfucker.res.lightTheme
 import com.kanha.photifyfucker.res.photifyAIXML
-import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
-import com.kanha.photifyfucker.viewModels.MainActivityViewModel
 import com.kanha.photifyfucker.res.progress
 import com.kanha.photifyfucker.res.prompts
+import com.kanha.photifyfucker.res.sharedPrefsIsDynamicColor
+import com.kanha.photifyfucker.res.sharedPrefsThemeType
+import com.kanha.photifyfucker.res.systemTheme
 import com.kanha.photifyfucker.res.task
+import com.kanha.photifyfucker.res.themeHeader
+import com.kanha.photifyfucker.res.themeType
+import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
 import com.kanha.photifyfucker.util.KToast
+import com.kanha.photifyfucker.util.SharedPrefsManager
 import com.kanha.photifyfucker.util.checkRootOnHost
 import com.kanha.photifyfucker.util.cherryPicImages
 import com.kanha.photifyfucker.util.getPrompts
 import com.kanha.photifyfucker.util.storeXMLData
+import com.kanha.photifyfucker.viewModels.MainActivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -54,6 +68,8 @@ var showProgressBar = false
 var showAppIcon = false
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var sharedPrefsManager: SharedPrefsManager
 
     private fun init(){
         photifyAIXML = storeXMLData()
@@ -67,6 +83,36 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init()
+
+        sharedPrefsManager = SharedPrefsManager(this)
+
+        loadSettings(sharedPrefsManager)
+
+        themeType = sharedPrefsManager.getInt(sharedPrefsThemeType, 2)
+        when (themeType) {
+            ThemeType.LIGHT.value -> {
+                isDarkTheme = false
+                isSystemTheme = false
+                themeHeader = lightTheme
+            }
+
+            ThemeType.DARK.value -> {
+                isDarkTheme = true
+                isSystemTheme = false
+                themeHeader = darkTheme
+            }
+
+            else -> {
+                isSystemTheme = true
+                themeHeader = systemTheme
+            }
+        }
+
+        isDynamicColor = sharedPrefsManager.getBoolean(
+            sharedPrefsIsDynamicColor,
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        )
+
         setContent {
             PhotifyFuckerTheme {
                 // A surface container using the 'background' color from the theme
@@ -103,6 +149,7 @@ class MainActivity : ComponentActivity() {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier.fillMaxSize()
+//                                .padding(top = 16.dp)
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -123,7 +170,7 @@ class MainActivity : ComponentActivity() {
                                     description = "Set number of token to 30",
                                     onClick = {
                                         GlobalScope.launch {
-                                            viewModel.renew1(this@MainActivity)
+                                            viewModel.renew(this@MainActivity)
                                         }
                                     }
                                 )
@@ -225,6 +272,15 @@ fun TBar(context: Context) {
             Icon(
                 painter = painterResource(id = R.drawable.outline_terminal_24),
                 contentDescription = "Terminal",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        }
+        IconButton(onClick = {
+            context.startActivity(Intent(context, SettingsActivity::class.java))
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.outline_settings_24),
+                contentDescription = "Theme",
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
             )
         }

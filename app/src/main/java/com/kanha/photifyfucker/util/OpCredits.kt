@@ -76,14 +76,6 @@ fun terminateApp() {
     progress = "Killed"
 }
 
-fun createData(){
-    task = "Preparing Stuffs"
-//    var count = 0
-//    val total = 5
-//    progress = "$count/$total"
-
-}
-
 fun clearData(){
     task = "Clearing Data"
     var count = 0
@@ -117,47 +109,3 @@ fun clearData(){
         }
     }
 }
-
-fun changeUserID(newID : String = getRandomID()) {
-    val filePath = "/data/system/users/0/settings_ssaid.xml"
-    val pattern = Regex("[a-zA-Z0-9]{16}/ai.photify.app/")
-    val content = RunCommand.shell("cat $filePath")
-    val matchedString = pattern.find(content)?.value?.substring(0, 16)
-    RunCommand.shell("echo $matchedString")
-//    val updatedContent: String = content.replace(matchedString!!, newID)
-//    RunCommand.shell("echo \"${updatedContent}\" > $filePath")
-}
-
-fun getIDs(): ArrayList<SSAID> {
-    val ssaids = arrayListOf<SSAID>()
-    val filePath = "/data/system/users/0/settings_ssaid.xml"
-    val content = RunCommand.shell("cat $filePath")
-//    val file = File(filePath)
-//    val inputStream = FileInputStream(file)
-//
-//    val parser = Xml.newPullParser()
-//    parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
-//    parser.setInput(inputStream, null)
-
-    val parser = Xml.newPullParser()
-    parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
-    parser.setInput(StringReader(content))
-
-    while (parser.next() != XmlPullParser.END_DOCUMENT) {
-        if (parser.eventType == XmlPullParser.START_TAG && parser.name == "setting") {
-            val ssaid = SSAID(
-                id = parser.getAttributeValue(null, "id"),
-                name = parser.getAttributeValue(null, "name"),
-                value = parser.getAttributeValue(null, "value"),
-                `package` = parser.getAttributeValue(null, "package"),
-                defaultValue = parser.getAttributeValue(null, "defaultValue"),
-                defaultSysSet = parser.getAttributeValue(null, "defaultSysSet"),
-                log = parser.getAttributeValue(null, "log")
-            )
-            ssaids.add(ssaid)
-        }
-    }
-//    inputStream.close()
-    return ssaids
-}
-

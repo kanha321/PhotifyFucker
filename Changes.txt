@@ -1,4 +1,6 @@
-4:10 AM 7th Feb 2024   v2.0 stable
+4:10 AM 8th Feb 2024   v2.0 stable
+
+    added option to share image to Photify Fucker to save it without watermark
 
     added prompt option where user can see all the input prompt
     added click prompt card to copy prompt to clipboard
@@ -6,3 +8,18 @@
     generating token now automatically launches the app when finished
     now it also copies the last prompt to clipboard when generating token
 
+3:08 AM 9th Feb 2024 v3.0 alpha build 1
+
+    cleaned some unnecessary codes (more cleanups needed)
+
+    added settings page
+    added option to change the theme
+    added option to disable/enable Wallpaper based color theme
+    added option to disable/enable auto launch after token generation
+
+    fixed su icon click crash
+    removed refresh icon at toolbar in Terminal activity (it was not doing anything)
+
+    Feature to be added
+    option to save favourites to hidden folder
+    option to save all images to hidden folder

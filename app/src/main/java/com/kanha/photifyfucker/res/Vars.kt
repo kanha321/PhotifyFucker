@@ -1,6 +1,8 @@
 package com.kanha.photifyfucker.res
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
@@ -39,10 +41,38 @@ var progress by mutableStateOf("")
 var isCopying = false
 var totalPhotos: Int = 0
 
+@SuppressLint("SdCardPath")
 var photifyInternalDataPath = if (android.os.Build.VERSION.SDK_INT < 30) "/data/data/ai.photify.app" else "/data_mirror/data_ce/null/0/ai.photify.app"
 var photifyExternalDataPath = "/storage/emulated/0/Android/data/ai.photify.app"
 
 var photifyStoragePath = "/storage/emulated/0/Pictures/PhotifyFucker"
 
+@SuppressLint("SdCardPath")
 var fuckerInternalDataPath = if (android.os.Build.VERSION.SDK_INT < 30) "/data/data/com.kanha.photifyfucker" else "/data_mirror/data_ce/null/0/com.kanha.photifyfucker"
 var fuckerInternalFilePath = "$fuckerInternalDataPath/files"
+
+// SharedPrefs
+
+var sharedPrefsName = "PhotifyFuckerPrefs"
+var sharedPrefsThemeType = "themeType"
+var sharedPrefsIsDynamicColor = "isDynamicColor"
+
+// Theming stuffs
+
+var isDarkTheme by mutableStateOf(true)
+var isSystemTheme by mutableStateOf(true)
+var isDynamicColor by mutableStateOf(false)
+
+var themeType by mutableIntStateOf(0)
+
+var systemTheme = "System"
+var lightTheme = "Light"
+var darkTheme = "Dark"
+
+var themeHeader by mutableStateOf(systemTheme)
+
+enum class ThemeType(val value: Int) {
+    LIGHT(0),
+    DARK(1),
+    SYSTEM(2)
+}

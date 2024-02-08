@@ -53,14 +53,3 @@ fun readFileFromAssets(context: Context, fileName: String): String {
         ""
     }
 }
-
-fun loadBitmapFromRootAccess(filePath: String): Bitmap? {
-    try {
-        val processOutput = RunCommand.shell("cat $filePath")
-        val inputStream: InputStream = processOutput.byteInputStream()
-        return BitmapFactory.decodeStream(inputStream)
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-    return null
-}

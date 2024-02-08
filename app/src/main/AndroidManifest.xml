@@ -13,6 +13,11 @@
         android:theme="@style/Theme.PhotifyFucker"
         tools:targetApi="31">
         <activity
+            android:name=".activities.settings.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Theme.PhotifyFucker" />
+        <activity
             android:name=".PromptsAct"
             android:exported="false"
             android:label="@string/title_activity_prompts"
@@ -41,11 +46,6 @@
             android:name=".TerminalActivity"
             android:exported="false"
             android:label="@string/title_activity_terminal"
-            android:theme="@style/Theme.PhotifyFucker" />
-        <activity
-            android:name=".DeviceIDActivity"
-            android:exported="false"
-            android:label="@string/title_activity_device_idactivity"
             android:theme="@style/Theme.PhotifyFucker" />
         <activity
             android:name=".backups.TerminalActivity2"

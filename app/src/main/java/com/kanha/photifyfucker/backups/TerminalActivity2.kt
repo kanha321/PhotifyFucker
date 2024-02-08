@@ -29,7 +29,6 @@ import com.kanha.photifyfucker.res.outputLog
 import com.kanha.photifyfucker.res.sessionLog
 import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
 import com.kanha.photifyfucker.util.RunCommand
-import com.kanha.photifyfucker.util.changeUserID
 
 class TerminalActivity2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +53,7 @@ class TerminalActivity2 : ComponentActivity() {
 //                                            checkRootOnHost()
 //                                        }
 //                                        MyToast.show(this@TerminalActivity, rootStatus)
-                                        changeUserID()
+//                                        changeUserID()
 //                                    }
                             }) {
                                 Icon(
