@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kanha.photifyfucker.R
+import com.kanha.photifyfucker.res.isDarkTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KCardSingle(
     icon: Painter? = null,
@@ -83,7 +83,7 @@ fun KCardSingle(
             } else {
                 Modifier
                     .background(
-                        if (isSystemInDarkTheme()) Color(0xFF2E2E2E) else Color(0xFFECECEC)
+                        if (isDarkTheme) Color(0xFF2E2E2E) else Color(0xFFECECEC)
                     )
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             },

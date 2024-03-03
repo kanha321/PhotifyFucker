@@ -2,7 +2,6 @@ package com.kanha.photifyfucker.activities.settings
 
 import android.content.Context
 import android.os.Build
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -93,6 +92,16 @@ fun SettingsScreen(
                 icon = painterResource(R.drawable.outline_launch_24),
                 onCheckedChange = {
                     viewModel.launchAutomatically()
+                }
+            )
+            KCardSingle(
+                name = "Disable Auto Rotation",
+                description = "enable only if you are having issues",
+                addKSwitch = true,
+                initialSwitchState = disableRotation,
+                icon = painterResource(R.drawable.baseline_screen_rotation_24),
+                onCheckedChange = {
+                    viewModel.disableRotation()
                 }
             )
         }

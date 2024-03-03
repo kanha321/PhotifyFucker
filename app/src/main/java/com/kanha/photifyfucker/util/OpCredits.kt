@@ -69,6 +69,13 @@ fun updateUserID() {
     progress = "Updated"
 }
 
+fun disableRotation(){
+    progress = "Fixing Rotation"
+    val command = "settings put system accelerometer_rotation 0"
+    RunCommand.shell(command)
+    progress = "Fixed"
+}
+
 fun terminateApp() {
     progress = "Killing Photify"
     val command = "am force-stop ai.photify.app"

@@ -56,6 +56,9 @@ var fuckerInternalFilePath = "$fuckerInternalDataPath/files"
 var sharedPrefsName = "PhotifyFuckerPrefs"
 var sharedPrefsThemeType = "themeType"
 var sharedPrefsIsDynamicColor = "isDynamicColor"
+var sharedPrefsLaunchPhotify = "launchAutomatically"
+var sharedPrefsDisableRotation = "disableRotation"
+
 
 // Theming stuffs
 

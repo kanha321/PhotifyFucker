@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.kanha.photifyfucker.res.isDarkTheme
 import com.kanha.photifyfucker.res.isDynamicColor
+import com.kanha.photifyfucker.res.isSystemTheme
 
 private val DarkColorScheme = darkColorScheme(
 
@@ -83,9 +84,10 @@ private val LightColorScheme = lightColorScheme(
     scrim = md_theme_light_scrim,
 )
 
+
 @Composable
 fun PhotifyFuckerTheme(
-    darkTheme: Boolean = isDarkTheme,
+    darkTheme: Boolean = if (isSystemTheme) isSystemInDarkTheme() else isDarkTheme,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = isDynamicColor,
     content: @Composable () -> Unit
@@ -95,7 +97,6 @@ fun PhotifyFuckerTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

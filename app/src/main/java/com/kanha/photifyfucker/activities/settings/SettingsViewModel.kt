@@ -5,7 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kanha.photifyfucker.res.sharedPrefsDisableRotation
+import com.kanha.photifyfucker.res.sharedPrefsLaunchPhotify
 import com.kanha.photifyfucker.util.SharedPrefsManager
 
 class SettingsViewModel(
@@ -27,8 +28,12 @@ class SettingsViewModel(
         isDialogShown = true
     }
 
-    fun launchAutomatically(){
+    fun launchAutomatically() {
         launchAutomatically = !launchAutomatically
-        sharedPrefsManager.saveBoolean("launchAutomatically", launchAutomatically)
+        sharedPrefsManager.saveBoolean(sharedPrefsLaunchPhotify, launchAutomatically)
+    }
+    fun disableRotation() {
+        disableRotation = !disableRotation
+        sharedPrefsManager.saveBoolean(sharedPrefsDisableRotation, disableRotation)
     }
 }
