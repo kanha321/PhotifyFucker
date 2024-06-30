@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.kanha.photifyfucker.composables.DropDownMenu
 import com.kanha.photifyfucker.composables.ScrollableText
-import com.kanha.devicecontrol.extensions.clearString
+import com.kanha.photifyfucker.extension.clearString
 import com.kanha.photifyfucker.composables.Toolbar
 import com.kanha.photifyfucker.res.COMMANDS
 import com.kanha.photifyfucker.res.ERROR_LOG
@@ -49,10 +49,6 @@ import com.kanha.photifyfucker.res.sessionLog
 import com.kanha.photifyfucker.ui.theme.PhotifyFuckerTheme
 import com.kanha.photifyfucker.util.KToast
 import com.kanha.photifyfucker.util.checkRootOnHost
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 var commandsText by mutableStateOf("")
 var output by mutableStateOf("")

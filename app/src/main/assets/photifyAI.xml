@@ -1,6 +1,11 @@
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <map>
-    <string name=\"userId\">0123456789abcdef</string>
-    <boolean name=\"onboardingShown\" value=\"true\" />
-    <boolean name=\"isPrem\" value=\"true\" />
+    <int name="photoAdCount" value="0" />
+    <boolean name="onboardingShown" value="true" />
+    <boolean name="isPrem" value="false" />
+    <long name="sessionCount" value="0" />
+    <boolean name="inviteFriendShown" value="true" />
+    <boolean name="swipeHintShown" value="true" />
+    <string name="userId">0123456789abcdef</string>
+    <long name="photoCount" value="0" />
 </map>

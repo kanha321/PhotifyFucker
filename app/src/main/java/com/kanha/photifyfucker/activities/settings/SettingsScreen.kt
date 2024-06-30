@@ -98,7 +98,7 @@ fun SettingsScreen(
                 name = "Disable Auto Rotation",
                 description = "enable only if you are having issues",
                 addKSwitch = true,
-                initialSwitchState = disableRotation,
+                initialSwitchState = fixRotation,
                 icon = painterResource(R.drawable.baseline_screen_rotation_24),
                 onCheckedChange = {
                     viewModel.disableRotation()

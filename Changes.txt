@@ -20,6 +20,33 @@
     fixed su icon click crash
     removed refresh icon at toolbar in Terminal activity (it was not doing anything)
 
+3:08 AM 4th Mar 2024 v3.0 alpha build 2
+
+    fixed system theme not working
+    added rotation fix option in settings
+    fixed monet theming which was broken while development [implemented the above stuffs twice :( ]
+
+    changed all the strings (maybe) that used to say 30 credits
+
     Feature to be added
     option to save favourites to hidden folder
     option to save all images to hidden folder
+    (cleanups needed)
+
+
+[06:00 PM 29/Jun/2024]
+
+    changed more strings that used to say 30 credits
+    tried to implement my version of sharedPreference editor (R.I.P😒)
+    removed Prompt Activity since premium is needed for custom prompt (fuck you photify)
+
+[03:54 PM 30/Jun/2024] v3.0 alpha build 3
+
+    fixed crash on token regeneration, photify v2.5.0 is supported now
+    (might work on previous version but for that it is recommended to use older version of this app)
+    fixed crash while saving images from history section (this took a while to find & understand as they were stored in cache)
+
+    Feature to be added
+    option to save favourites to hidden folder
+    option to save all images to hidden folder
+    (still cleanups needed)

@@ -57,7 +57,7 @@ var sharedPrefsName = "PhotifyFuckerPrefs"
 var sharedPrefsThemeType = "themeType"
 var sharedPrefsIsDynamicColor = "isDynamicColor"
 var sharedPrefsLaunchPhotify = "launchAutomatically"
-var sharedPrefsDisableRotation = "disableRotation"
+var sharedPrefsFixRotation = "disableRotation"
 
 
 // Theming stuffs

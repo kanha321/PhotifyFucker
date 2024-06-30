@@ -1,4 +1,4 @@
-package com.kanha.devicecontrol.extensions
+package com.kanha.photifyfucker.extension
 
 fun String.clearString(): String {
     return ""

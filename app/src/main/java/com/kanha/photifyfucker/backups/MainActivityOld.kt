@@ -19,7 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.kanha.photifyfucker.MainActivity
+import com.kanha.photifyfucker.activities.MainActivity
 import com.kanha.photifyfucker.res.androidVersion
 import com.kanha.photifyfucker.res.copyAll
 import com.kanha.photifyfucker.res.exit

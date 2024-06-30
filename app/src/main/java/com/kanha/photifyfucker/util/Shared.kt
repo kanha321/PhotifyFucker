@@ -2,6 +2,7 @@ package com.kanha.photifyfucker.util
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import com.kanha.photifyfucker.res.photifyInternalDataPath
 import com.kanha.photifyfucker.res.photifyStoragePath
 import java.io.File
@@ -14,7 +15,7 @@ fun getSharedFileName(intent: Intent): String? {
     if (Intent.ACTION_SEND == action && type != null) {
         val sharedFileUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
         if (sharedFileUri != null) {
-            val fileName = File(sharedFileUri.path).name
+            val fileName = File(sharedFileUri.path as String).name
             return fileName
         }
     }
@@ -41,6 +42,17 @@ fun getNonWaterMarkedImage(filename: String){
     }
     copyWithShell(jpgFiles[index - 1].absolutePath, outputDir)
 }
+
+fun getNonWaterMarkedImageFromHistory(filename: String){
+    val dir = "$photifyInternalDataPath/cache/"
+    val cleanPicName = filename.replace("W.jpg", ".jpg")
+    val outputDir = "$photifyStoragePath/Favorites/"
+    if (!exists(File(outputDir).toPath())) {
+        RunCommand.shell("mkdir $outputDir")
+    }
+    copyWithShell("$dir$cleanPicName", outputDir)
+}
+
 
 fun linearSearch(filename: String, images: ArrayList<File>): Int {
     for (index in images.indices) {

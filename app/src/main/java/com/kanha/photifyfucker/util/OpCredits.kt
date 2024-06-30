@@ -1,6 +1,7 @@
 package com.kanha.photifyfucker.util
 
 import android.content.Context
+import android.util.Log
 import android.util.Xml
 import com.kanha.photifyfucker.model.SSAID
 import com.kanha.photifyfucker.res.photifyInternalDataPath
@@ -8,18 +9,45 @@ import com.kanha.photifyfucker.res.photifyAIXML
 import com.kanha.photifyfucker.res.progress
 import com.kanha.photifyfucker.res.task
 import org.xmlpull.v1.XmlPullParser
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.io.StringReader
 import kotlin.random.Random
 
 private const val TAG = "OpCredits"
-fun writeToFile(context: Context, fileContents: String = getXMLData(context)){
+fun writeToFile(context: Context, fileContents: String = getXMLData(context)) {
     progress = "Writing content to file"
     val filename = "photifyAI.xml"
 
+    val regex = Regex("""<string name="identityPhotos">.*?</string>""")
+
+    val xmlString = fileContents.replace(regex, "")
+
     context.openFileOutput(filename, Context.MODE_PRIVATE).use {
-        it.write(fileContents.toByteArray())
+        it.write(xmlString.toByteArray())
     }
+    Log.d(TAG, "writeToFile: $xmlString")
     progress = "Written Successfully"
+}
+
+fun readFromFile(context: Context, filename: String): String {
+    val stringBuilder = StringBuilder()
+
+    try {
+        context.openFileInput(filename).use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    stringBuilder.append(line).append('\n')
+                }
+            }
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return "Error reading file: ${e.message}"
+    }
+
+    return stringBuilder.toString()
 }
 fun getRandomID(length: Int = 16): String {
     val characters = "0123456789abcdef"
@@ -48,7 +76,7 @@ fun writeToFileShell(context: Context, fileContents: String = getXMLData(context
     val output2 = RunCommand.shell("chmod 660 $fileName")
 }
 
-fun deletePhotoData(){
+fun deletePhotoData() {
     progress = "Deleting Photo Data"
     val regex = "<string name=\"currIdentityPhoto\">\\{.*?\\}</string>".toRegex()
     photifyAIXML = photifyAIXML.replaceFirst(regex, "")
@@ -65,15 +93,27 @@ fun changePhotoCount(count: Int = 0) {
 fun updateUserID() {
     progress = "Updating User ID"
     val regex = "<string name=\"userId\">[a-zA-Z0-9]{16}</string>".toRegex()
-    photifyAIXML = photifyAIXML.replaceFirst(regex, "<string name=\"userId\">${getRandomID()}</string>")
+    photifyAIXML =
+        photifyAIXML.replaceFirst(regex, "<string name=\"userId\">${getRandomID()}</string>")
     progress = "Updated"
 }
 
-fun disableRotation(){
+fun disableRotation() {
     progress = "Fixing Rotation"
     val command = "settings put system accelerometer_rotation 0"
     RunCommand.shell(command)
     progress = "Fixed"
+}
+
+fun getCurrentRotationValues(): Pair<Int, Int>{
+    val autoRotation = RunCommand.shell("settings get system user_rotation")
+    val screenOrientation = RunCommand.shell("settings get system accelerometer_rotation")
+    return Pair(autoRotation.toInt(), screenOrientation.toInt())
+}
+
+fun setRotationValues(rotationPair: Pair<Int, Int>){
+    RunCommand.shell("settings put system user_rotation ${rotationPair.first}")
+    RunCommand.shell("settings put system accelerometer_rotation ${rotationPair.second}")
 }
 
 fun terminateApp() {
@@ -83,7 +123,7 @@ fun terminateApp() {
     progress = "Killed"
 }
 
-fun clearData(){
+fun clearData() {
     task = "Clearing Data"
     var count = 0
 
@@ -112,7 +152,7 @@ fun clearData(){
         if (file != "photifyAI.xml") {
             deleteWithShell("$photifyInternalDataPath/shared_prefs/$file")
             count++
-            progress = "$count/${files.size-1}"
+            progress = "$count/${files.size - 1}"
         }
     }
 }
