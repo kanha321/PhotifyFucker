@@ -50,3 +50,8 @@
     option to save favourites to hidden folder
     option to save all images to hidden folder
     (still cleanups needed)
+
+[09:12 PM 03/Jul/2024] v3.0 alpha build 4 (close to stable)
+
+    switched to dev branch finally (it was detached to head 😒)
+    its too late.. Yup, I know, My monitor's doing nashe!!

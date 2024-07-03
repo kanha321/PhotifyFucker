@@ -3,6 +3,7 @@ package com.kanha.photifyfucker.util
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import com.kanha.photifyfucker.res.photifyFavouritesFolder
 import com.kanha.photifyfucker.res.photifyInternalDataPath
 import com.kanha.photifyfucker.res.photifyStoragePath
 import java.io.File
@@ -37,7 +38,7 @@ fun getNonWaterMarkedImage(filename: String){
         }
     }
     val index = linearSearch(filename, jpgFiles)
-    val outputDir = "$photifyStoragePath/$photifyStoragePath/"
+    val outputDir = "$photifyStoragePath/$photifyFavouritesFolder/"
     if (!exists(File(outputDir).toPath())) {
         RunCommand.shell("mkdir $outputDir")
     }
