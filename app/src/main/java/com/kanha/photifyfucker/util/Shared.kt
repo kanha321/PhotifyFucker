@@ -6,6 +6,7 @@ import android.util.Log
 import com.kanha.photifyfucker.res.photifyInternalDataPath
 import com.kanha.photifyfucker.res.photifyStoragePath
 import java.io.File
+import java.lang.System.currentTimeMillis
 import java.nio.file.Files.exists
 
 fun getSharedFileName(intent: Intent): String? {
@@ -36,7 +37,7 @@ fun getNonWaterMarkedImage(filename: String){
         }
     }
     val index = linearSearch(filename, jpgFiles)
-    val outputDir = "$photifyStoragePath/Favorites/"
+    val outputDir = "$photifyStoragePath/$photifyStoragePath/"
     if (!exists(File(outputDir).toPath())) {
         RunCommand.shell("mkdir $outputDir")
     }
@@ -50,7 +51,7 @@ fun getNonWaterMarkedImageFromHistory(filename: String){
     if (!exists(File(outputDir).toPath())) {
         RunCommand.shell("mkdir $outputDir")
     }
-    copyWithShell("$dir$cleanPicName", outputDir)
+    copyWithShell("$dir$cleanPicName", "${outputDir}photify_s${currentTimeMillis()}.jpg")
 }
 
 

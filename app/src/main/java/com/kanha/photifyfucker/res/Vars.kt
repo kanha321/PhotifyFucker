@@ -6,13 +6,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
-//var sharedPref = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n" +
-//        "<map>\n" +
-//        "    <string name=\"userId\">${userID}</string>\n" +
-//        "    <boolean name=\"onboardingShown\" value=\"true\" />\n" +
-//        "    <boolean name=\"isPrem\" value=\"true\" />\n" +
-//        "</map>\n"
-
 var photifyAIXML by mutableStateOf("")
 var prompts = arrayListOf("")
 
@@ -46,6 +39,9 @@ var photifyInternalDataPath = if (android.os.Build.VERSION.SDK_INT < 30) "/data/
 var photifyExternalDataPath = "/storage/emulated/0/Android/data/ai.photify.app"
 
 var photifyStoragePath = "/storage/emulated/0/Pictures/PhotifyFucker"
+var photifyStoragePathHidden = "/storage/emulated/0/Pictures/.PhotifyFucker"
+var photifyFavouritesFolder = "Favorites"
+var photifyFavouritesFolderHidden = ".Favorites"
 
 @SuppressLint("SdCardPath")
 var fuckerInternalDataPath = if (android.os.Build.VERSION.SDK_INT < 30) "/data/data/com.kanha.photifyfucker" else "/data_mirror/data_ce/null/0/com.kanha.photifyfucker"
