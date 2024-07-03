@@ -12,6 +12,5 @@ var fixRotation by mutableStateOf(false)
 
 fun loadSettings(sharedPrefsManager: SharedPrefsManager){
     launchAutomatically = sharedPrefsManager.getBoolean(sharedPrefsLaunchPhotify, true)
-    fixRotation = sharedPrefsManager.getBoolean(sharedPrefsFixRotation, false)
+    fixRotation = sharedPrefsManager.getBoolean(sharedPrefsFixRotation, true)
 }
-
